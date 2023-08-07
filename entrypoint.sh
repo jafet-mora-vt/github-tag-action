@@ -13,7 +13,6 @@ dryrun=${DRY_RUN:-false}
 git_api_tagging=${GIT_API_TAGGING:-true}
 initial_version=${INITIAL_VERSION:-0.0.0}
 tag_context=${TAG_CONTEXT:-repo}
-prerelease=${PRERELEASE:-false}
 suffix=${PRERELEASE_SUFFIX:-beta}
 verbose=${VERBOSE:-false}
 major_string_token=${MAJOR_STRING_TOKEN:-#major}
@@ -37,7 +36,6 @@ echo -e "\tDRY_RUN: ${dryrun}"
 echo -e "\tGIT_API_TAGGING: ${git_api_tagging}"
 echo -e "\tINITIAL_VERSION: ${initial_version}"
 echo -e "\tTAG_CONTEXT: ${tag_context}"
-echo -e "\tPRERELEASE: ${prerelease}"
 echo -e "\tPRERELEASE_SUFFIX: ${suffix}"
 echo -e "\tVERBOSE: ${verbose}"
 echo -e "\tMAJOR_STRING_TOKEN: ${major_string_token}"
@@ -58,7 +56,7 @@ setOutput() {
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 
-pre_release="$prerelease"
+pre_release="false"
 IFS=',' read -ra branch <<< "$release_branches"
 for b in "${branch[@]}"; do
     # check if ${current_branch} is in ${release_branches} | exact branch match
