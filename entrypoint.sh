@@ -120,12 +120,6 @@ then
     fi
 fi
 
-echo "************************************************"
-log=$(git log "${tag_commit}".."${commit}" --format=%B)
-echo $log
-echo "************************************************"
-
-
 # get current commit hash for tag
 tag_commit=$(git rev-list -n 1 "$tag" || true )
 # get current commit hash
@@ -138,6 +132,12 @@ then
     setOutput "tag" "$tag"
     exit 0
 fi
+
+echo "************************************************"
+log=$(git log "${tag_commit}".."${commit}" --format=%B)
+echo $log
+echo "************************************************"
+
 
 # # sanitize that the default_branch is set (via env var when running on PRs) else find it natively
 # if [ -z "${default_branch}" ] && [ "$branch_history" == "full" ]
