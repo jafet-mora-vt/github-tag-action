@@ -61,9 +61,6 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 pre_release="$prerelease"
 IFS=',' read -ra branch <<< "$release_branches"
 
-echo "Debugging: ${branch}";
-echo "Debugginng: ${branch[@]}"
-
 for b in "${branch[@]}"; do
     # check if ${current_branch} is in ${release_branches} | exact branch match
     if [[ "$current_branch" == "$b" ]]
@@ -77,6 +74,8 @@ for b in "${branch[@]}"; do
     fi
 done
 echo "pre_release = $pre_release"
+
+echo "Debug: $pre_release"
 
 # fetch tags
 git fetch --tags
