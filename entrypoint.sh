@@ -24,6 +24,9 @@ branch_history=${BRANCH_HISTORY:-compare}
 # since https://github.blog/2022-04-12-git-security-vulnerability-announced/ runner uses?
 git config --global --add safe.directory /github/workspace
 
+FEATURE_BRANCH=${GITHUB_HEAD_REF}
+echo "TEST: $FEATURE_BRANCH"
+
 cd "${GITHUB_WORKSPACE}/${source}" || exit 1
 
 echo "*** CONFIGURATION ***"
