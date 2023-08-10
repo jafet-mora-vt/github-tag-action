@@ -184,7 +184,7 @@ if [[ "$is_pre_tag_newer" == "true"* ]]; then
 	echo "modifing tag"
 	tag=${pre_tag%%-build*}
  	echo $tag
- 
+fi 
 
 case "$log" in
     *#major* ) new=$(semver -i major $tag); part="major"; pre_release="false";;
