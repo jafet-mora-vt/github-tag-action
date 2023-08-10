@@ -114,6 +114,7 @@ then
     fi
 fi
 
+echo "$tag"
 
 # get current commit hash for tag
 echo "----------------------------------------------------------------"
