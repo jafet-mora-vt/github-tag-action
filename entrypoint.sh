@@ -62,7 +62,6 @@ pre_release="$prerelease"
 IFS=',' read -ra branch <<< "$release_branches"
 
 for b in "${branch[@]}"; do
-    echo "Debug loop: $current_branch - ${branch[@]}"
     # check if ${current_branch} is in ${release_branches} | exact branch match
     if [[ "$current_branch" == "$b" ]]
     then
@@ -159,7 +158,7 @@ declare -A history_type=(
 log=${history_type[${branch_history}]}
 printf "History:\n---\n%s\n---\n" "$log"
 
-echo "Debugging ${log}"
+echo "Debugging $log"
 
 case "$log" in
     *$major_string_token* ) new=$(semver -i major "$tag"); part="major";;
