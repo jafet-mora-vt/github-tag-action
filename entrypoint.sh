@@ -121,7 +121,7 @@ then
 fi
 
 echo "************************************************"
-log=$(git log "${default_branch}"..HEAD --format=%B)
+log=$(git log "${tag_commit}".."${commit}" --format=%B)
 echo $log
 echo "************************************************"
 
