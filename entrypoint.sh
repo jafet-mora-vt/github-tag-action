@@ -72,18 +72,23 @@ echo "pre_release = $pre_release"
 # fetch tags
 git fetch --tags
 
+echo "-*** $tag_context ***-"
+
 case "$tag_context" in
     *repo*) 
     	echo "Here 1"
         tag=$(git for-each-ref --sort=-committerdate --format '%(refname)' | cut -d / -f 3- | grep -E "^v?[0-9]+.[0-9]+.[0-9]+$" | head -n1)
+	echo "Here 1.1"
         pre_tag=$(git for-each-ref --sort=-committerdate --format '%(refname)' | cut -d / -f 3- | grep -E "^v?[0-9]+.[0-9]+.[0-9]+(-$suffix.[0-9]+)?$" | head -n1)
+	echo "Here 1.2"
         ;;
     *branch*) 
     	echo "Here 2"
         tag=$(git tag --list --merged HEAD --sort=-committerdate | grep -E "^v?[0-9]+.[0-9]+.[0-9]+$" | head -n1)
         pre_tag=$(git tag --list --merged HEAD --sort=-committerdate | grep -E "^v?[0-9]+.[0-9]+.[0-9]+(-$suffix.[0-9]+)?$" | head -n1)
         ;;
-    * ) echo "Unrecognised context"; exit 1;;
+    * ) echo "Unrecognised context"; 
+    	exit 1;;
 esac
 
 
