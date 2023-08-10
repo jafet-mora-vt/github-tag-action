@@ -6,7 +6,7 @@ set -eo pipefail
 default_semvar_bump=${DEFAULT_BUMP:-minor}
 default_branch=${DEFAULT_BRANCH:-$GITHUB_BASE_REF} # get the default branch from github runner env vars
 with_v=${WITH_V:-false}
-release_branches=${RELEASE_BRANCHES:-master,main}
+release_branches=${RELEASE_BRANCHES:-test,dev,main}
 custom_tag=${CUSTOM_TAG:-}
 source=${SOURCE:-.}
 dryrun=${DRY_RUN:-false}
@@ -58,6 +58,9 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 
 pre_release="false"
 IFS=',' read -ra branch <<< "$release_branches"
+
+echo "Debugging: ${branch}"
+
 for b in "${branch[@]}"; do
     # check if ${current_branch} is in ${release_branches} | exact branch match
     if [[ "$current_branch" == "$b" ]]
