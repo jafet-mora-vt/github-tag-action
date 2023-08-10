@@ -160,30 +160,28 @@ fi
 echo "last debug: $default_semvar_bump"
 
 case "$log" in
-    *$major_string_token* ) new=$(semver -i major "$tag"); part="major";;
-    *$minor_string_token* ) new=$(semver -i minor "$tag"); part="minor";;
-    *$patch_string_token* ) new=$(semver -i patch "$tag"); part="patch";;
+    *#major* ) new=$(semver -i major $tag); part="major";;
+    *#minor* ) new=$(semver -i minor $tag); part="minor";;
+    *#patch* ) new=$(semver -i patch $tag); part="patch";;
     * )
-        if [ "$default_semvar_bump" == "none" ]
-        then
-            echo "Default bump was set to none. Skipping..."
-            setOutput "old_tag" "$tag"
-            setOutput "new_tag" "$tag"
-            setOutput "tag" "$tag"
-            setOutput "part" "$default_semvar_bump"
-            exit 0
+    	echo "Default bump was set."
+     
+        if $pre_release; then
+	    if [[ "$pre_tag" == *"$new"* ]]; then
+	        new=$(semver -i prerelease $pre_tag --preid $suffix); 
+	 	part="pre-$part"
+	    else
+	        new="$new-$suffix.1"; part="pre-$part"
+	    fi
         else
-            echo "Debug ****";
             new=$(semver -i "${default_semvar_bump}" "$tag")
-
-            echo "New: $new";
-            
             part=$default_semvar_bump
-
-            echo "Part: $part";
         fi
         ;;
 esac
+
+echo "New: $new";
+echo "Part: $part";
 
 # if $pre_release
 # then
@@ -224,17 +222,17 @@ esac
 #     fi
 #     echo -e "Bumping tag ${tag} - New tag ${new}"
 # fi
-if $pre_release
-then
-    # Already a prerelease available, bump it
-    if [[ "$pre_tag" == *"$new"* ]]; then
-        new=$(semver -i prerelease $pre_tag --preid $suffix); part="pre-$part"
-    else
-        new="$new-$suffix.1"; part="pre-$part"
-    fi
-fi
+# if $pre_release
+# then
+#     # Already a prerelease available, bump it
+#     if [[ "$pre_tag" == *"$new"* ]]; then
+#         new=$(semver -i prerelease $pre_tag --preid $suffix); part="pre-$part"
+#     else
+#         new="$new-$suffix.1"; part="pre-$part"
+#     fi
+# fi
 
-echo $part
+# echo $part
 
 # did we get a new tag?
 if [ ! -z "$new" ]
