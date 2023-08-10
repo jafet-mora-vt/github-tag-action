@@ -93,6 +93,10 @@ case "$tag_context" in
         exit 1;;
 esac
 
+echo "-----------------------------------"
+echo $git_refs
+echo "-----------------------------------"
+
 # get the latest tag that looks like a semver (with or without v)
 matching_tag_refs=$( (grep -E "$tagFmt" <<< "$git_refs") || true)
 matching_pre_tag_refs=$( (grep -E "$preTagFmt" <<< "$git_refs") || true)
@@ -163,8 +167,6 @@ echo "************************************************"
 # echo "Debug commands: tag_coomit: ${tag_commit} - ${commit}";
 # test=$(echo git log "${tag_commit}".."${commit}" --format=%B);
 # echo "$test";
-
-echo "last: $log"
 
 case "$log" in
     *#major* ) new=$(semver -i major $tag); part="major";;
