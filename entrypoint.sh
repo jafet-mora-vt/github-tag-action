@@ -153,31 +153,56 @@ case "$log" in
     	echo "No version tag."
      	# esac
         if $pre_release; then
-	    echo "here"
-     	    echo $new
-	    echo $pre_tag
-	  
-	    if [[ "$pre_tag" == *"$new"* ]]; then
-     		echo "testing"
-  #    		new=$(semver -i "${default_semvar_bump}" "$tag")
-		# new="$new-$suffix.1"; 
-  # 		part="pre-$part"
+	    	echo "here"
+	  		is_pre_tag_older="true"
+			# Remove the "-build" component from version1
+			pre_tag_without_build=${pre_tag%%-build*}
+			
+			echo "pre_tag_without_build without -build: $pre_tag_without_build"
+			
+			# Split versions into components
+			IFS="-." read -ra pre_tag_components <<< "$pre_tag_without_build"
+			IFS="-." read -ra tag_components <<< "$tag"
+			
+			# Compare MAJOR, MINOR, and PATCH components
+			if [[ ${pre_tag_components[0]} -lt ${tag_components[0]} ]]; then
+			    echo "$pre_tag is older than $tag"
+			elif [[ ${pre_tag_components[0]} -gt ${tag_components[0]} ]]; then
+   				is_pre_tag_older="false"
+			    echo "$pre_tag is newer than $tag"
+			else
+			    if [[ ${pre_tag_components[1]} -lt ${tag_components[1]} ]]; then
+			        echo "$pre_tag is older than $tag"
+			    elif [[ ${pre_tag_components[1]} -gt ${tag_components[1]} ]]; then
+					is_pre_tag_older="false"        
+		   			echo "$pre_tag is newer than $tag"
+			    else
+			        if [[ ${pre_tag_components[2]} -lt ${tag_components[2]} ]]; then
+			            echo "$pre_tag is older than $tag"
+			        elif [[ ${pre_tag_components[2]} -gt ${tag_components[2]} ]]; then
+			        	is_pre_tag_older="false"
+			   			echo "$pre_tag is newer than $tag"
+			        else
+		   				is_pre_tag_older="false"
+			            echo "$pre_tag is the same as $tag"
+			        fi
+			    fi
+			fi
+   
+	    	if [[ "$is_pre_tag_older" == "true"* ]]; then
+     			echo "testing"
+				new=$(semver -i "${default_semvar_bump}" "$tag")
+				new="$new-$suffix.1"; 
+  				part="pre-$part"
      		
-  #      		echo $part;
-	 # 	echo $new;
-   # Codigo para continuar con los pre releases
-   #   		echo "here 1"
-	  #       new=$(semver -i prerelease $pre_tag --preid $suffix); 
-	 	# part="pre-$part"
-	    else
-     		echo "here 2"
-	        
+       			echo $part;
+	 			echo $new;
+			else
+   				echo "here 1"
+	        	new=$(semver -i prerelease $pre_tag --preid $suffix); 
+	 			part="pre-$part"
+   			fi
 	    fi
-        else
-	    echo "here 3"
-            new=$(semver -i "${default_semvar_bump}" "$tag")
-            part=$default_semvar_bump
-        fi
         ;;
 esac
 
