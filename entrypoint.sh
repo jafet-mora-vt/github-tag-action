@@ -97,6 +97,8 @@ case "$tag_context" in
         exit 1;;
 esac
 
+echo "Debugging: ${git_refs}";
+
 # get the latest tag that looks like a semver (with or without v)
 matching_tag_refs=$( (grep -E "$tagFmt" <<< "$git_refs") || true)
 matching_pre_tag_refs=$( (grep -E "$preTagFmt" <<< "$git_refs") || true)
