@@ -155,6 +155,12 @@ declare -A history_type=(
     ["full"]="$(git log "${default_branch}"..HEAD --format=%B)" \
     ["compare"]="$(git log "${tag_commit}".."${commit}" --format=%B)" \
 )
+
+echo "Debug commands: tag_coomit: ${tag_commit} - ${commit}";
+test=$(echo git log "${tag_commit}".."${commit}" --format=%B);
+echo "$test";
+
+
 log=${history_type[${branch_history}]}
 printf "History:\n---\n%s\n---\n" "$log"
 
