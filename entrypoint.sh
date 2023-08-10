@@ -158,6 +158,11 @@ declare -A history_type=(
 log=${history_type[${branch_history}]}
 printf "History:\n---\n%s\n---\n" "$log"
 
+echo "Log after: ${log}";
+echo "Major case: ${major_string_token}";
+echo "Minor case: ${minor_string_token}";
+echo "Patch case: ${patch_string_token}";
+
 case "$log" in
     *$major_string_token* ) new=$(semver -i major "$tag"); part="major";;
     *$minor_string_token* ) new=$(semver -i minor "$tag"); part="minor";;
