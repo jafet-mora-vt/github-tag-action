@@ -121,7 +121,7 @@ then
 fi
 
 echo "************************************************"
-log=$(git show -s --format=%B)
+log=$(git log "${default_branch}"..HEAD --format=%B)
 echo $log
 echo "************************************************"
 
