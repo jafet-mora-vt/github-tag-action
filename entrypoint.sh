@@ -61,8 +61,13 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 pre_release="$prerelease"
 IFS=',' read -ra branch <<< "$release_branches"
 for b in "${branch[@]}"; do
-    echo "Is $b a match for ${current_branch}"
-    if [[ "${current_branch}" =~ $b ]]
+    # check if ${current_branch} is in ${release_branches} | exact branch match
+    if [[ "$current_branch" == "$b" ]]
+    then
+        pre_release="false"
+    fi
+    # verify non specific branch names like  .* release/* if wildcard filter then =~
+    if [ "$b" != "${b//[\[\]|.? +*]/}" ] && [[ "$current_branch" =~ $b ]]
     then
         pre_release="false"
     fi
@@ -114,18 +119,8 @@ then
     fi
 fi
 
-echo "$tag"
-
 # get current commit hash for tag
-echo "----------------------------------------------------------------"
-git rev-list -n 1 "$tag" || true
-echo "----------------------------------------------------------------"
-
 tag_commit=$(git rev-list -n 1 "$tag" || true )
-
-echo "----------------------------------------------------------------"
-git rev-parse HEAD
-echo "----------------------------------------------------------------"
 # get current commit hash
 commit=$(git rev-parse HEAD)
 # skip if there are no new commits for non-pre_release
@@ -137,27 +132,7 @@ then
     exit 0
 fi
 
-echo "debuggggg"
-echo "$tag_commit"
-echo "$commit"
-
-# get current commit hash for tag
-tag_commit=$(git rev-list -n 1 "$tag")
-
-echo "Here 1"
-echo "$tag_commit"
-# get current commit hash
-commit=$(git rev-parse HEAD)
-
-echo "Here 2"
-echo "$commit"
-# skip if there are no new commits for non-pre_release
-if [ "$tag_commit" == "$commit" ]; then
-    echo "No new commits since previous tag. Skipping..."
-    setOutput "new_tag" "$tag"
-    setOutput "tag" "$tag"
-    exit 0
-fi
+echo "gafasdadadada"
 
 # # sanitize that the default_branch is set (via env var when running on PRs) else find it natively
 # if [ -z "${default_branch}" ] && [ "$branch_history" == "full" ]
