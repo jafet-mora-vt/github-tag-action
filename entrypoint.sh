@@ -114,8 +114,23 @@ then
     fi
 fi
 
-echo "Debug tag: $tag";
-echo "Debug pre tag: $pre_tag";
+
+# get current commit hash for tag
+tag_commit=$(git rev-list -n 1 "$tag" || true )
+# get current commit hash
+commit=$(git rev-parse HEAD)
+# skip if there are no new commits for non-pre_release
+if [ "$tag_commit" == "$commit" ]
+then
+    echo "No new commits since previous tag. Skipping..."
+    setOutput "new_tag" "$tag"
+    setOutput "tag" "$tag"
+    exit 0
+fi
+
+echo "debuggggg"
+echo "$tag_commit"
+echo "$commit"
 
 # get current commit hash for tag
 tag_commit=$(git rev-list -n 1 "$tag")
