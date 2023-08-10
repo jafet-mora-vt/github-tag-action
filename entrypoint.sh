@@ -179,13 +179,17 @@ case "$log" in
     	echo "Default bump was set."
      
         if $pre_release; then
+	    echo "here"
 	    if [[ "$pre_tag" == *"$new"* ]]; then
+     		echo "here 1"
 	        new=$(semver -i prerelease $pre_tag --preid $suffix); 
 	 	part="pre-$part"
 	    else
+     		echo "here 2"
 	        new="$new-$suffix.1"; part="pre-$part"
 	    fi
         else
+	    echo "here 3"
             new=$(semver -i "${default_semvar_bump}" "$tag")
             part=$default_semvar_bump
         fi
@@ -195,65 +199,15 @@ esac
 echo "New: $new";
 echo "Part: $part";
 
-# if $pre_release
-# then
-#     # get current commit hash for tag
-#     pre_tag_commit=$(git rev-list -n 1 "$pre_tag" || true)
-#     # skip if there are no new commits for pre_release
-#     if [ "$pre_tag_commit" == "$commit" ]
-#     then
-#         echo "No new commits since previous pre_tag. Skipping..."
-#         setOutput "new_tag" "$pre_tag"
-#         setOutput "tag" "$pre_tag"
-#         exit 0
-#     fi
-#     # already a pre-release available, bump it
-#     if [[ "$pre_tag" =~ $new ]] && [[ "$pre_tag" =~ $suffix ]]
-#     then
-#         if $with_v
-#         then
-#             new=v$(semver -i prerelease "${pre_tag}" --preid "${suffix}")
-#         else
-#             new=$(semver -i prerelease "${pre_tag}" --preid "${suffix}")
-#         fi
-#         echo -e "Bumping ${suffix} pre-tag ${pre_tag}. New pre-tag ${new}"
-#     else
-#         if $with_v
-#         then
-#             new="v$new-$suffix.0"
-#         else
-#             new="$new-$suffix.0"
-#         fi
-#         echo -e "Setting ${suffix} pre-tag ${pre_tag} - With pre-tag ${new}"
-#     fi
-#     part="pre-$part"
-# else
-#     if $with_v
-#     then
-#         new="v$new"
-#     fi
-#     echo -e "Bumping tag ${tag} - New tag ${new}"
-# fi
-# if $pre_release
-# then
-#     # Already a prerelease available, bump it
-#     if [[ "$pre_tag" == *"$new"* ]]; then
-#         new=$(semver -i prerelease $pre_tag --preid $suffix); part="pre-$part"
-#     else
-#         new="$new-$suffix.1"; part="pre-$part"
-#     fi
-# fi
-
-# echo $part
 
 # did we get a new tag?
 if [ ! -z "$new" ]
 then
-	# prefix with 'v'
-	if $with_v
-	then
-		new="v$new"
-	fi
+    # prefix with 'v'
+    if $with_v
+        then
+	    new="v$new"
+     fi
 fi
 
 if [ ! -z $custom_tag ]
