@@ -128,6 +128,13 @@ then
     fi
 fi
 
+echo "************************************************"
+git log $tag..HEAD --pretty='%B'
+echo "************************************************"
+git log --pretty='%B'
+echo "************************************************"
+
+
 # get current commit hash for tag
 tag_commit=$(git rev-list -n 1 "$tag" || true )
 # get current commit hash
