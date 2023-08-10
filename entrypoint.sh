@@ -95,8 +95,6 @@ case "$tag_context" in
         exit 1;;
 esac
 
-echo "Debugging: ${git_refs}";
-
 # get the latest tag that looks like a semver (with or without v)
 matching_tag_refs=$( (grep -E "$tagFmt" <<< "$git_refs") || true)
 matching_pre_tag_refs=$( (grep -E "$preTagFmt" <<< "$git_refs") || true)
@@ -160,6 +158,8 @@ declare -A history_type=(
 )
 log=${history_type[${branch_history}]}
 printf "History:\n---\n%s\n---\n" "$log"
+
+echo "Debugging ${log}"
 
 case "$log" in
     *$major_string_token* ) new=$(semver -i major "$tag"); part="major";;
