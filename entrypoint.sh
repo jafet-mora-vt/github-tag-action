@@ -69,18 +69,17 @@ for b in "${branch[@]}"; do
 done
 echo "pre_release = $pre_release"
 
-echo "here 1"
 # fetch tags
 git fetch --tags
 
-echo "here 2"
-
 case "$tag_context" in
     *repo*) 
+    	echo "Here 1"
         tag=$(git for-each-ref --sort=-committerdate --format '%(refname)' | cut -d / -f 3- | grep -E "^v?[0-9]+.[0-9]+.[0-9]+$" | head -n1)
         pre_tag=$(git for-each-ref --sort=-committerdate --format '%(refname)' | cut -d / -f 3- | grep -E "^v?[0-9]+.[0-9]+.[0-9]+(-$suffix.[0-9]+)?$" | head -n1)
         ;;
     *branch*) 
+    	echo "Here 2"
         tag=$(git tag --list --merged HEAD --sort=-committerdate | grep -E "^v?[0-9]+.[0-9]+.[0-9]+$" | head -n1)
         pre_tag=$(git tag --list --merged HEAD --sort=-committerdate | grep -E "^v?[0-9]+.[0-9]+.[0-9]+(-$suffix.[0-9]+)?$" | head -n1)
         ;;
