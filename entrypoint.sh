@@ -76,8 +76,6 @@ for b in "${branch[@]}"; do
 done
 echo "pre_release = $pre_release"
 
-echo "Debug: $pre_release"
-
 # fetch tags
 git fetch --tags
 
@@ -104,6 +102,8 @@ matching_tag_refs=$( (grep -E "$tagFmt" <<< "$git_refs") || true)
 matching_pre_tag_refs=$( (grep -E "$preTagFmt" <<< "$git_refs") || true)
 tag=$(head -n 1 <<< "$matching_tag_refs")
 pre_tag=$(head -n 1 <<< "$matching_pre_tag_refs")
+
+echo "Get latest tag ${tag} - ${pre_tag}";
 
 # if there are none, start tags at INITIAL_VERSION
 if [ -z "$tag" ]
