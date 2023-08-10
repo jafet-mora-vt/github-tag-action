@@ -154,16 +154,24 @@ case "$log" in
      	# esac
         if $pre_release; then
 	    echo "here"
+     	    echo $new
+	    echo $pre_tag
+	  
 	    if [[ "$pre_tag" == *"$new"* ]]; then
-     		new="$new-$suffix.1"; part="pre-$part"
-       		echo $part;
-	 	echo $new;
+     		echo "testing"
+  #    		new=$(semver -i "${default_semvar_bump}" "$tag")
+		# new="$new-$suffix.1"; 
+  # 		part="pre-$part"
+     		
+  #      		echo $part;
+	 # 	echo $new;
+   # Codigo para continuar con los pre releases
    #   		echo "here 1"
 	  #       new=$(semver -i prerelease $pre_tag --preid $suffix); 
 	 	# part="pre-$part"
 	    else
      		echo "here 2"
-	        new="$new-$suffix.1"; part="pre-$part"
+	        
 	    fi
         else
 	    echo "here 3"
