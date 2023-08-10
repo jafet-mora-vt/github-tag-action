@@ -116,7 +116,12 @@ fi
 
 
 # get current commit hash for tag
+
+git rev-list -n 1 "$tag" || true
+
 tag_commit=$(git rev-list -n 1 "$tag" || true )
+
+git rev-parse HEAD
 # get current commit hash
 commit=$(git rev-parse HEAD)
 # skip if there are no new commits for non-pre_release
