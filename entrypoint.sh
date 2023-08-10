@@ -157,7 +157,7 @@ fi
 # test=$(echo git log "${tag_commit}".."${commit}" --format=%B);
 # echo "$test";
 
-echo "last debug: $default_semvar_bump"
+echo "last: $log"
 
 case "$log" in
     *#major* ) new=$(semver -i major $tag); part="major";;
