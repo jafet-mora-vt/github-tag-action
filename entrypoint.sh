@@ -181,7 +181,12 @@ case "$log" in
         else
             echo "Debug ****";
             new=$(semver -i "${default_semvar_bump}" "$tag")
+
+            echo "New: $new";
+            
             part=$default_semvar_bump
+
+            echo "Part: $part";
         fi
         ;;
 esac
