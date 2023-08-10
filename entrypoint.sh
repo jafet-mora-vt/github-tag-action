@@ -179,7 +179,7 @@ case "$log" in
             setOutput "part" "$default_semvar_bump"
             exit 0
         else
-        `    echo "Debug ****"
+            echo "Debug ****";
             new=$(semver -i "${default_semvar_bump}" "$tag")
             part=$default_semvar_bump
         fi
