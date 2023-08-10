@@ -136,10 +136,8 @@ fi
 
 echo "************************************************"
 FEATURE_BRANCH=${GITHUB_HEAD_REF}
-BRANCH=$(git symbolic-ref --short $FEATURE_BRANCH)
-
 # Get the SHA of the last commit on the branch
-LAST_COMMIT_SHA=$(git log --format="%H" -n 1 origin/$BRANCH)
+LAST_COMMIT_SHA=$(git log --format="%H" -n 1 origin/$FEATURE_BRANCH)
 
 # Print the current branch name and the SHA of the last commit
 echo "Current branch: $BRANCH"
