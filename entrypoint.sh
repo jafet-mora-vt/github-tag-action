@@ -24,9 +24,6 @@ branch_history=${BRANCH_HISTORY:-compare}
 # since https://github.blog/2022-04-12-git-security-vulnerability-announced/ runner uses?
 git config --global --add safe.directory /github/workspace
 
-FEATURE_BRANCH=${GITHUB_HEAD_REF}
-echo "TEST: $FEATURE_BRANCH"
-
 cd "${GITHUB_WORKSPACE}/${source}" || exit 1
 
 echo "*** CONFIGURATION ***"
@@ -138,7 +135,8 @@ fi
 
 
 echo "************************************************"
-BRANCH=$(git symbolic-ref --short HEAD)
+FEATURE_BRANCH=${GITHUB_HEAD_REF}
+BRANCH=$(git symbolic-ref --short $FEATURE_BRANCH)
 
 # Get the SHA of the last commit on the branch
 LAST_COMMIT_SHA=$(git log --format="%H" -n 1 origin/$BRANCH)
