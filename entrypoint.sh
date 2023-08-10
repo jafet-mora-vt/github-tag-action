@@ -158,8 +158,6 @@ declare -A history_type=(
 log=${history_type[${branch_history}]}
 printf "History:\n---\n%s\n---\n" "$log"
 
-echo "Debugging $log"
-
 case "$log" in
     *$major_string_token* ) new=$(semver -i major "$tag"); part="major";;
     *$minor_string_token* ) new=$(semver -i minor "$tag"); part="minor";;
@@ -181,6 +179,7 @@ case "$log" in
             setOutput "part" "$default_semvar_bump"
             exit 0
         else
+        `    echo "Debug ****"
             new=$(semver -i "${default_semvar_bump}" "$tag")
             part=$default_semvar_bump
         fi
