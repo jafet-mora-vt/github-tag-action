@@ -99,39 +99,30 @@ matching_pre_tag_refs=$( (grep -E "$preTagFmt" <<< "$git_refs") || true)
 tag=$(head -n 1 <<< "$matching_tag_refs")
 pre_tag=$(head -n 1 <<< "$matching_pre_tag_refs")
 
-
-echo "tag: $tag"
-
-echo "pre tag: $pre_tag"
 # if there are none, start tags at INITIAL_VERSION
 if [ -z "$tag" ]
 then
     if $with_v
     then
         tag="v$initial_version"
-	log=$(git log --pretty='%B')
     else
         tag="$initial_version"
-	log=$(git log --pretty='%B')
     fi
     
     if [ -z "$pre_tag" ] && $pre_release
     then
         if $with_v
         then
-	    log=$(git log $tag..HEAD --pretty='%B')
             pre_tag="v$initial_version"
         else
-	    log=$(git log $tag..HEAD --pretty='%B')
             pre_tag="$initial_version"
         fi
     fi
 fi
 
 echo "************************************************"
-git log $tag..HEAD --pretty='%B'
-echo "************************************************"
-git log --pretty='%B'
+log=$(git show -s --format=%B)
+echo $log
 echo "************************************************"
 
 
