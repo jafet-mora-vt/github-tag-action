@@ -132,8 +132,6 @@ then
     exit 0
 fi
 
-echo "gafasdadadada"
-
 # # sanitize that the default_branch is set (via env var when running on PRs) else find it natively
 # if [ -z "${default_branch}" ] && [ "$branch_history" == "full" ]
 # then
@@ -159,24 +157,12 @@ echo "gafasdadadada"
 # test=$(echo git log "${tag_commit}".."${commit}" --format=%B);
 # echo "$test";
 
-printf "History:\n---\n%s\n---\n" "$log"
-
-echo "Log after: ${log}";
-echo "Major case: ${major_string_token}";
-echo "Minor case: ${minor_string_token}";
-echo "Patch case: ${patch_string_token}";
+echo "last debug: $default_semvar_bump"
 
 case "$log" in
     *$major_string_token* ) new=$(semver -i major "$tag"); part="major";;
     *$minor_string_token* ) new=$(semver -i minor "$tag"); part="minor";;
     *$patch_string_token* ) new=$(semver -i patch "$tag"); part="patch";;
-    *$none_string_token* )
-        echo "Default bump was set to none. Skipping..."
-        setOutput "old_tag" "$tag"
-        setOutput "new_tag" "$tag"
-        setOutput "tag" "$tag"
-        setOutput "part" "$default_semvar_bump"
-        exit 0;;
     * )
         if [ "$default_semvar_bump" == "none" ]
         then
