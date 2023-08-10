@@ -143,33 +143,35 @@ echo "************************************************"
 
 echo $pre_tag
 
+echo $tag
+
 case "$log" in
     *#major* ) new=$(semver -i major $tag); part="major"; pre_release="false";;
     *#minor* ) new=$(semver -i minor $tag); part="minor"; pre_release="false";;
     *#patch* ) new=$(semver -i patch $tag); part="patch"; pre_release="false";;
-    * ) echo "No version tag.";;
+    * ) 
+    	echo "No version tag."
+     	# esac
+        if $pre_release; then
+	    echo "here"
+	    if [[ "$pre_tag" == *"$new"* ]]; then
+     		new="$new-$suffix.1"; part="pre-$part"
+       		echo $part;
+	 	echo $new;
+   #   		echo "here 1"
+	  #       new=$(semver -i prerelease $pre_tag --preid $suffix); 
+	 	# part="pre-$part"
+	    else
+     		echo "here 2"
+	        new="$new-$suffix.1"; part="pre-$part"
+	    fi
+        else
+	    echo "here 3"
+            new=$(semver -i "${default_semvar_bump}" "$tag")
+            part=$default_semvar_bump
+        fi
+        ;;
 esac
-     
-#         if $pre_release; then
-# 	    echo "here"
-# 	    if [[ "$pre_tag" == *"$new"* ]]; then
-#      		new="$new-$suffix.1"; part="pre-$part"
-#        		echo $part;
-# 	 	echo $new;
-#    #   		echo "here 1"
-# 	  #       new=$(semver -i prerelease $pre_tag --preid $suffix); 
-# 	 	# part="pre-$part"
-# 	    else
-#      		echo "here 2"
-# 	        new="$new-$suffix.1"; part="pre-$part"
-# 	    fi
-#         else
-# 	    echo "here 3"
-#             new=$(semver -i "${default_semvar_bump}" "$tag")
-#             part=$default_semvar_bump
-#         fi
-#         ;;
-# esac
 
 echo "New: $new";
 echo "Part: $part";
