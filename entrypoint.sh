@@ -72,59 +72,46 @@ echo "pre_release = $pre_release"
 # fetch tags
 git fetch --tags
 
-echo "-*** $tag_context ***-"
+tagFmt="^v?[0-9]+\.[0-9]+\.[0-9]+$"
+preTagFmt="^v?[0-9]+\.[0-9]+\.[0-9]+(-$suffix\.[0-9]+)$"
 
+# get the git refs
+git_refs=
 case "$tag_context" in
-    *repo*) 
-    	echo "Here 1"
-        tag=$(git for-each-ref --sort=-committerdate --format '%(refname)' | cut -d / -f 3- | grep -E "^v?[0-9]+.[0-9]+.[0-9]+$" | head -n1)
-	echo "Here 1.1"
-        pre_tag=$(git for-each-ref --sort=-committerdate --format '%(refname)' | cut -d / -f 3- | grep -E "^v?[0-9]+.[0-9]+.[0-9]+(-$suffix.[0-9]+)?$" | head -n1)
-	echo "Here 1.2"
+    *repo*)
+        git_refs=$(git for-each-ref --sort=-v:refname --format '%(refname:lstrip=2)')
         ;;
-    *branch*) 
-    	echo "Here 2"
-        tag=$(git tag --list --merged HEAD --sort=-committerdate | grep -E "^v?[0-9]+.[0-9]+.[0-9]+$" | head -n1)
-        pre_tag=$(git tag --list --merged HEAD --sort=-committerdate | grep -E "^v?[0-9]+.[0-9]+.[0-9]+(-$suffix.[0-9]+)?$" | head -n1)
+    *branch*)
+        git_refs=$(git tag --list --merged HEAD --sort=-committerdate)
         ;;
-    * ) echo "Unrecognised context"; 
-    	exit 1;;
+    * ) echo "Unrecognised context"
+        exit 1;;
 esac
 
-
-echo "here 3"
-# tagFmt="^v?[0-9]+\.[0-9]+\.[0-9]+$"
-# preTagFmt="^v?[0-9]+\.[0-9]+\.[0-9]+(-$suffix\.[0-9]+)$"
-
-# # get the git refs
-# git_refs=
-# case "$tag_context" in
-#     *repo*)
-#         git_refs=$(git for-each-ref --sort=-v:refname --format '%(refname:lstrip=2)')
-#         ;;
-#     *branch*)
-#         git_refs=$(git tag --list --merged HEAD --sort=-committerdate)
-#         ;;
-#     * ) echo "Unrecognised context"
-#         exit 1;;
-# esac
-
-# # get the latest tag that looks like a semver (with or without v)
-# matching_tag_refs=$( (grep -E "$tagFmt" <<< "$git_refs") || true)
-# matching_pre_tag_refs=$( (grep -E "$preTagFmt" <<< "$git_refs") || true)
-# tag=$(head -n 1 <<< "$matching_tag_refs")
-# pre_tag=$(head -n 1 <<< "$matching_pre_tag_refs")
-
-echo "Get latest tag ${tag} - ${pre_tag}";
+# get the latest tag that looks like a semver (with or without v)
+matching_tag_refs=$( (grep -E "$tagFmt" <<< "$git_refs") || true)
+matching_pre_tag_refs=$( (grep -E "$preTagFmt" <<< "$git_refs") || true)
+tag=$(head -n 1 <<< "$matching_tag_refs")
+pre_tag=$(head -n 1 <<< "$matching_pre_tag_refs")
 
 # if there are none, start tags at INITIAL_VERSION
 if [ -z "$tag" ]
 then
-    log=$(git log --pretty='%B')
-    tag="$initial_version"
-    pre_tag="$initial_version"
-else
-    log=$(git log $tag..HEAD --pretty='%B')
+    if $with_v
+    then
+        tag="v$initial_version"
+    else
+        tag="$initial_version"
+    fi
+    if [ -z "$pre_tag" ] && $pre_release
+    then
+        if $with_v
+        then
+            pre_tag="v$initial_version"
+        else
+            pre_tag="$initial_version"
+        fi
+    fi
 fi
 
 echo "Debug tag: $tag";
