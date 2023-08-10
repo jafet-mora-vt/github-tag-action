@@ -133,44 +133,6 @@ then
     exit 0
 fi
 
-
-echo "************************************************"
-FEATURE_BRANCH=${GITHUB_HEAD_REF}
-# Get the SHA of the last commit on the branch
-LAST_COMMIT_SHA=$(git log --format="%H" -n 1 origin/$FEATURE_BRANCH)
-# Print the current branch name and the SHA of the last commit
-echo "Last commit SHA: $LAST_COMMIT_SHA"
-echo "************************************************"
-log=$(git log -1 --pretty=format:"%s" $LAST_COMMIT_SHA)
-echo $log
-echo "************************************************"
-
-
-# # sanitize that the default_branch is set (via env var when running on PRs) else find it natively
-# if [ -z "${default_branch}" ] && [ "$branch_history" == "full" ]
-# then
-#     echo "The DEFAULT_BRANCH should be autodetected when tag-action runs on on PRs else must be defined, See: https://github.com/anothrNick/github-tag-action/pull/230, since is not defined we find it natively"
-#     default_branch=$(git branch -rl '*/master' '*/main' | cut -d / -f2)
-#     echo "default_branch=${default_branch}"
-#     # re check this
-#     if [ -z "${default_branch}" ]
-#     then
-#         echo "::error::DEFAULT_BRANCH must not be null, something has gone wrong."
-#         exit 1
-#     fi
-# fi
-
-# get the merge commit message looking for #bumps
-# declare -A history_type=(
-#     ["last"]="$(git show -s --format=%B)" \
-#     ["full"]="$(git log "${default_branch}"..HEAD --format=%B)" \
-#     ["compare"]="$(git log "${tag_commit}".."${commit}" --format=%B)" \
-# )
-
-# echo "Debug commands: tag_coomit: ${tag_commit} - ${commit}";
-# test=$(echo git log "${tag_commit}".."${commit}" --format=%B);
-# echo "$test";
-
 case "$log" in
     *#major* ) new=$(semver -i major $tag); part="major";;
     *#minor* ) new=$(semver -i minor $tag); part="minor";;
@@ -181,9 +143,12 @@ case "$log" in
         if $pre_release; then
 	    echo "here"
 	    if [[ "$pre_tag" == *"$new"* ]]; then
-     		echo "here 1"
-	        new=$(semver -i prerelease $pre_tag --preid $suffix); 
-	 	part="pre-$part"
+     		new="$new-$suffix.1"; part="pre-$part"
+       		echo $part;
+	 	echo $new;
+   #   		echo "here 1"
+	  #       new=$(semver -i prerelease $pre_tag --preid $suffix); 
+	 	# part="pre-$part"
 	    else
      		echo "here 2"
 	        new="$new-$suffix.1"; part="pre-$part"
@@ -214,12 +179,6 @@ if [ ! -z $custom_tag ]
 then
     new="$custom_tag"
 fi
-
-# as defined in readme if CUSTOM_TAG is used any semver calculations are irrelevant.
-# if [ -n "$custom_tag" ]
-# then
-#     new="$custom_tag"
-# fi
 
 # set outputs
 setOutput "new_tag" "$new"
