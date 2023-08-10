@@ -69,8 +69,11 @@ for b in "${branch[@]}"; do
 done
 echo "pre_release = $pre_release"
 
+ECHO "here 1"
 # fetch tags
 git fetch --tags
+
+ECHO "here 2"
 
 case "$tag_context" in
     *repo*) 
@@ -84,6 +87,8 @@ case "$tag_context" in
     * ) echo "Unrecognised context"; exit 1;;
 esac
 
+
+ECHO "here 3"
 # tagFmt="^v?[0-9]+\.[0-9]+\.[0-9]+$"
 # preTagFmt="^v?[0-9]+\.[0-9]+\.[0-9]+(-$suffix\.[0-9]+)$"
 
