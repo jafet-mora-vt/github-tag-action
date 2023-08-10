@@ -93,10 +93,6 @@ case "$tag_context" in
         exit 1;;
 esac
 
-echo "-----------------------------------"
-echo $git_refs
-echo "-----------------------------------"
-
 # get the latest tag that looks like a semver (with or without v)
 matching_tag_refs=$( (grep -E "$tagFmt" <<< "$git_refs") || true)
 matching_pre_tag_refs=$( (grep -E "$preTagFmt" <<< "$git_refs") || true)
@@ -137,6 +133,16 @@ then
     exit 0
 fi
 
+
+echo "************************************************"
+BRANCH=$(git symbolic-ref --short HEAD)
+
+# Get the SHA of the last commit on the branch
+LAST_COMMIT_SHA=$(git log --format="%H" -n 1 origin/$BRANCH)
+
+# Print the current branch name and the SHA of the last commit
+echo "Current branch: $BRANCH"
+echo "Last commit SHA: $LAST_COMMIT_SHA"
 echo "************************************************"
 log=$(git log "${tag_commit}".."${commit}" --format=%B)
 echo $log
