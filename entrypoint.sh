@@ -133,23 +133,15 @@ then
     exit 0
 fi
 
-echo "************************************************"
 FEATURE_BRANCH=${GITHUB_HEAD_REF}
 LAST_COMMIT_SHA=$(git log --format="%H" -n 1 origin/$FEATURE_BRANCH)
-echo "Last commit SHA: $LAST_COMMIT_SHA"
 log=$(git log -1 --pretty=format:"%s" $LAST_COMMIT_SHA)
-echo $log
-echo "************************************************"
 
-echo $pre_tag
-echo $tag
-
+echo "Pre tag: $pre_tag"
+echo "Tag: $tag"
 
 is_pre_tag_newer="false"
-# Remove the "-build" component from version1
 pre_tag_without_build=${pre_tag%%-build*}
-			
-echo "pre_tag_without_build without -build: $pre_tag_without_build"
 			
 # Split versions into components
 IFS="-." read -ra pre_tag_components <<< "$pre_tag_without_build"
@@ -181,9 +173,7 @@ else
 fi
 
 if [[ "$is_pre_tag_newer" == "true"* ]]; then
-	echo "modifing tag"
 	tag=${pre_tag%%-build*}
- 	echo $tag
 fi 
 
 case "$log" in
@@ -191,26 +181,18 @@ case "$log" in
     *#minor* ) new=$(semver -i minor $tag); part="minor"; pre_release="false";;
     *#patch* ) new=$(semver -i patch $tag); part="patch"; pre_release="false";;
     * ) 
-    	echo "No version tag."
-     	# esac
+    	echo "No version tag indicated, creating a prerelease."
         if $pre_release; then
-	    	echo "here"
-   
-	    	if [[ "$is_pre_tag_newer" == "false" ]]; then
-     			echo "testing"
-				new=$(semver -i "${default_semvar_bump}" "$tag")
-				new="$tag-$suffix.1"; 
-  				part="pre-$part"
-     		
-       			echo $part;
-	 			echo $new;
-			else
-   				echo "here 1"
-	        	new=$(semver -i prerelease $pre_tag --preid $suffix); 
-	 			part="pre-$part"
-   			fi
-	    fi
-        ;;
+	    if [[ "$is_pre_tag_newer" == "false" ]]; then
+	        new=$(semver -i "${default_semvar_bump}" "$tag")
+		new="$tag-$suffix.1"; 
+  		part="pre-$part"
+	    else
+	      	new=$(semver -i prerelease $pre_tag --preid $suffix); 
+	 	part="pre-$part"
+   	    fi
+	fi
+    ;;
 esac
 
 echo "New: $new";
