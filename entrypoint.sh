@@ -188,7 +188,12 @@ case "$log" in
 		new="$tag-$suffix.1"; 
   		part="pre-$part"
 	    else
-	      	new=$(semver -i prerelease $pre_tag --preid $suffix); 
+		pre_tag=0.0.1-build
+		suffix=1
+		# Set the initial pre-release version
+		initial_version="${pre_tag}.${suffix}"			
+  
+     		new=$(semver -i prerelease $initial_version --preid $suffix)
 	 	part="pre-$part"
    	    fi
 	fi
