@@ -176,6 +176,10 @@ if [[ "$is_pre_tag_newer" == "true"* ]]; then
 	tag=${pre_tag%%-build*}
 fi 
 
+echo "Testing: Pre tag is newer = $is_pre_tag_newer"
+echo "Pre tag: $pre_tag"
+echo "Tag: $tag"
+
 case "$log" in
     *#major* ) new=$(semver -i major $tag); part="major"; pre_release="false";;
     *#minor* ) new=$(semver -i minor $tag); part="minor"; pre_release="false";;
@@ -183,31 +187,27 @@ case "$log" in
     * ) 
     	echo "No version tag indicated, creating a prerelease."
         if $pre_release; then
-	    if [[ "$is_pre_tag_newer" == "false" ]]; then
-     		echo "Here"
-       		echo "${default_semvar_bump}"
-	        new=$(semver -i "${default_semvar_bump}" "$tag")
-		new="$tag-$suffix.1"; 
-  		part="pre-$part"
-	    else  
-     		if [[ $pre_tag == *".0" ]]; then
-		  # If it ends with '.0', set it to '.1'
-		  pre_tag="${pre_tag%.*}.1"
-		fi
-  
-		ver="${pre_tag}-${suffix}.0"
-
-  		echo "Test: ${ver}" 
-		new=$(semver -i prerelease $ver --preid $suffix); 
-	 	part="pre-$part"
-   	    fi
-	fi
+	        if [[ "$is_pre_tag_newer" == "false" ]]; then
+	            echo "Here 0"
+	            
+	            if [[ $pre_tag == *".0" ]]; then
+	                echo "Here 0.1"
+		            # If it ends with '.0', set it to '.1'
+		            pre_tag="${pre_tag%.*}.1"
+		            pre_tag="${pre_tag}-${suffix}.0"
+		        fi
+	            
+	            new=$(semver -i prerelease $pre_tag --preid $suffix); 
+  		        part="pre-$part"
+	        else  
+		        new=$(semver -i prerelease $pre_tag --preid $suffix); 
+	 	        part="pre-$part"
+   	        fi
+	    fi
     ;;
 esac
 
-echo "New: $new";
-echo "Part: $part";
-
+echo $new
 
 # did we get a new tag?
 if [ ! -z "$new" ]
