@@ -187,7 +187,9 @@ case "$log" in
     * ) 
     	echo "No version tag indicated, creating a prerelease."
         if $pre_release; then
-	        if [[ "$is_pre_tag_newer" == "false" ]]; then
+            if [[ "$is_pre_tag_equals" == "true" ]]; then 
+  		        new=$(semver -i prerelease $pre_tag --preid $suffix); 
+	        elif [[ "$is_pre_tag_newer" == "false" ]]; then
 	            echo "Here 0"
 	            
 	            if [[ $pre_tag == *".0" ]]; then
@@ -195,9 +197,9 @@ case "$log" in
 		            # If it ends with '.0', set it to '.1'
 		            pre_tag="${pre_tag%.*}.1"
 		            pre_tag="${pre_tag}-${suffix}.0"
-				else
+		        else
 		            pre_tag="${tag}-${suffix}.0"
-		    	fi
+		        fi
 	            
 	            new=$(semver -i prerelease $pre_tag --preid $suffix); 
   		        part="pre-$part"
