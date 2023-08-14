@@ -166,7 +166,7 @@ else
 			is_pre_tag_newer="true"
 			echo "$pre_tag is newer than $tag"
 		else
-			is_pre_tag_newer="true"
+			is_pre_tag_newer="false"
 			echo "$pre_tag is the same as $tag"
 		fi
 	fi
@@ -196,6 +196,8 @@ case "$log" in
 		fi
   
 		ver="${pre_tag}-${suffix}.0"
+
+  		echo "Test: ${ver}" 
 		new=$(semver -i prerelease $ver --preid $suffix); 
 	 	part="pre-$part"
    	    fi
