@@ -188,6 +188,11 @@ case "$log" in
 		new="$tag-$suffix.1"; 
   		part="pre-$part"
 	    else  
+     		if [[ $pre_tag == *".0" ]]; then
+		  # If it ends with '.0', set it to '.1'
+		  pre_tag="${pre_tag%.*}.1"
+		fi
+  
 		ver="${pre_tag}-${suffix}.0"
 		new=$(semver -i prerelease $ver --preid $suffix); 
 	 	part="pre-$part"
