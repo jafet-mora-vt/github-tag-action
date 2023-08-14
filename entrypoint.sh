@@ -184,6 +184,8 @@ case "$log" in
     	echo "No version tag indicated, creating a prerelease."
         if $pre_release; then
 	    if [[ "$is_pre_tag_newer" == "false" ]]; then
+     		echo "Here"
+       		echo "${default_semvar_bump}"
 	        new=$(semver -i "${default_semvar_bump}" "$tag")
 		new="$tag-$suffix.1"; 
   		part="pre-$part"
