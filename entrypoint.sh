@@ -194,16 +194,20 @@ case "$log" in
 	            
 	            if [[ $pre_tag == *".0" ]]; then
 	                echo "Here 0.1"
-		            # If it ends with '.0', set it to '.1'
-		            pre_tag="${pre_tag%.*}.1"
-		            pre_tag="${pre_tag}-${suffix}.0"
-		        else
-		            pre_tag="${tag}-${suffix}.0"
-		        fi
-	            
+		        # If it ends with '.0', set it to '.1'
+		        pre_tag="${pre_tag%.*}.1"
+		        pre_tag="${pre_tag}-${suffix}.0"
+		    else
+		        pre_tag="${tag}-${suffix}.0"
+		    fi
 	                new=$(semver -i prerelease $pre_tag --preid $suffix); 
-		 	echo "Test09: $new"
-  		        part="pre-$part"
+		 	part="pre-$part"
+		 	
+			echo "Debug new: $new"
+   			echo "Debug part: $part"
+			echo "Debug pretag: $pre_tag"
+   			echo "Debug suffix: $suffix"
+  		        
 	        else  
 		        new=$(semver -i prerelease $pre_tag --preid $suffix); 
 	 	        part="pre-$part"
