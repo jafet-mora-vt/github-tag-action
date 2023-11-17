@@ -198,8 +198,6 @@ case "$log" in
 		        # If it ends with '.0', set it to '.1'
 		        pre_tag="${pre_tag%.*}.1"
 		        pre_tag="${pre_tag}-${suffix}.0"
-		    else
-		        pre_tag="${tag}-${suffix}.0"
 		    fi
 	                new=$(semver -i prerelease $pre_tag --preid $suffix); 
 		 	part="pre-$part"
