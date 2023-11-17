@@ -201,7 +201,8 @@ case "$log" in
 		            pre_tag="${tag}-${suffix}.0"
 		        fi
 	            
-	            new=$(semver -i prerelease $pre_tag --preid $suffix); 
+	                new=$(semver -i prerelease $pre_tag --preid $suffix); 
+		 	echo "Test09: $new"
   		        part="pre-$part"
 	        else  
 		        new=$(semver -i prerelease $pre_tag --preid $suffix); 
