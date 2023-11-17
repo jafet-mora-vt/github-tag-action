@@ -191,6 +191,7 @@ case "$log" in
   		        new=$(semver -i prerelease $pre_tag --preid $suffix); 
 	        elif [[ "$is_pre_tag_newer" == "false" ]]; then
 	            echo "Here 0"
+	     	    echo "Debug before here 0: $tag"
 	            
 	            if [[ $pre_tag == *".0" ]]; then
 	                echo "Here 0.1"
